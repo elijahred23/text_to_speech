@@ -9,11 +9,16 @@
   <textarea id="text-to-read" rows="5" cols="50">Enter text here to be read aloud.</textarea>
   <button onclick="speak()">Speak</button>
   <button onclick="paste()">Paste</button>
+  <button onclick="stop()">Stop</button>
+  <button onclick="pause()">Pause</button>
+  <button onclick="resume()">Resume</button>
   
   <script>
+    var utterance;
+    
     function speak() {
       var text = document.getElementById("text-to-read").value;
-      var utterance = new SpeechSynthesisUtterance(text);
+      utterance = new SpeechSynthesisUtterance(text);
       speechSynthesis.speak(utterance);
     }
     
@@ -21,6 +26,18 @@
       navigator.clipboard.readText().then(function(text) {
         document.getElementById("text-to-read").value = text;
       });
+    }
+    
+    function stop() {
+      speechSynthesis.cancel();
+    }
+    
+    function pause() {
+      speechSynthesis.pause();
+    }
+    
+    function resume() {
+      speechSynthesis.resume();
     }
   </script>
 </body>
