@@ -13,13 +13,48 @@
   <button onclick="pause()">Pause</button>
   <button onclick="resume()">Resume</button>
   
+  <label>
+    <input type="checkbox" id="repeat-checkbox">
+    Repeat
+  </label>
+  
+  <label for="voice-select">Voice:</label>
+  <select id="voice-select"></select>
+
   <script>
     var utterance;
     
     function speak() {
       var text = document.getElementById("text-to-read").value;
       utterance = new SpeechSynthesisUtterance(text);
+      if (document.getElementById("repeat-checkbox").checked) {
+        utterance.onend = function() {
+          speechSynthesis.speak(utterance);
+        };
+      }
+      var voices = speechSynthesis.getVoices();
+      var selectedVoice = document.getElementById("voice-select").value;
+      for (var i = 0; i < voices.length; i++) {
+        if (voices[i].name === selectedVoice) {
+          utterance.voice = voices[i];
+          break;
+        }
+      }
       speechSynthesis.speak(utterance);
+    }
+    
+    function populateVoiceList() {
+      var voices = speechSynthesis.getVoices();
+      var voiceSelect = document.getElementById("voice-select");
+      for (var i = 0; i < voices.length; i++) {
+        var option = document.createElement("option");
+        option.value = voices[i].name;
+        option.textContent = voices[i].name + " (" + voices[i].lang + ")";
+        if (voices[i].default) {
+          option.selected = true;
+        }
+        voiceSelect.appendChild(option);
+      }
     }
     
     function paste() {
@@ -38,6 +73,11 @@
     
     function resume() {
       speechSynthesis.resume();
+    }
+    
+    populateVoiceList();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoiceList;
     }
   </script>
 </body>
