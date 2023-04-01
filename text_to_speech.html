@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Text to Speech Example</title>
+</head>
+<body>
+  <h1>Text to Speech Example</h1>
+  <textarea id="text-to-read" rows="5" cols="50">Enter text here to be read aloud.</textarea>
+  <button onclick="speak()">Speak</button>
+  <button onclick="paste()">Paste</button>
+  
+  <script>
+    function speak() {
+      var text = document.getElementById("text-to-read").value;
+      var utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+    
+    function paste() {
+      navigator.clipboard.readText().then(function(text) {
+        document.getElementById("text-to-read").value = text;
+      });
+    }
+  </script>
+</body>
+</html>
